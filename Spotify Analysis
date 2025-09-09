@@ -1,0 +1,101 @@
+--For this project, I downloaded Spotify data from Kaggle.
+--Then I created a table to insert the Spotify data into.
+--Afterward I inserted the Spotify Data .csv into the table.
+
+--Finally I explored the data using the following SQL to ask these questions.
+
+--#1 Who are the top 10 artists based on popularity?--
+SELECT artist_name
+, AVG(popularity) AS avg_popularity
+FROM Spotifydata
+GROUP BY artist_name
+ORDER BY avg_popularity DESC
+LIMIT 10;
+
+--#2 Which songs are longer than 4 minutes (240,000 ms)?--
+SELECT artist_name
+, track_name
+, duration_ms
+FROM Spotifydata
+WHERE duration_ms > 240000
+ORDER BY duration_ms DESC;
+
+--#3 Find the average danceability of all songs.--
+SELECT AVG(danceability) AS avg_dance
+FROM Spotifydata;
+
+--#4 Which songss are more danceable than the average?--
+SELECT artist_name
+, track_name
+, danceability
+FROM Spotifydata
+WHERE danceability > 
+    (SELECT AVG(danceability)
+    FROM Spotifydata)
+ORDER BY danceability DESC;
+
+--#5 Which 5 songs have the highest energy?--
+SELECT artist_name
+, track_name
+, energy
+FROM Spotifydata
+ORDER BY energy DESC
+LIMIT 5;
+
+--#6 Find the top 3 artists with the most songs in the Top 50.--
+SELECT artist_name
+, COUNT(track_name) AS song_count
+FROM Spotifydata
+GROUP BY artist_name
+ORDER BY song_count DESC
+LIMIT 3;
+
+--#7 List all songs where energy >0.8 AND danceability >0.7.--
+SELECT artist_name
+, track_name
+, energy
+, danceability
+FROM Spotifydata
+WHERE energy > 0.8
+AND danceability > 0.7
+ORDER BY energy DESC;
+
+--#8 What is the most common time signature?--
+SELECT time_signature
+, COUNT(*) AS frequency
+FROM Spotifydata
+GROUP BY time_signature
+ORDER BY frequency DESC
+LIMIT 1;
+
+--#9 Which songs are in the most common time signature?--
+SELECT artist_name
+, track_name
+, time_signature
+FROM Spotifydata
+WHERE time_signature >= 4
+ORDER BY artist_name;
+
+--#10 Find the top 5 happiest songs (highest valence).--
+SELECT artist_name
+, track_name
+, valence
+FROM Spotifydata
+ORDER BY valence DESC
+LIMIT 5;
+
+--#11 Find loudest and softesT song.--
+--LOUDEST--
+SELECT artist_name
+, track_name
+, loudness
+FROM Spotifydata
+ORDER BY loudness DESC
+LIMIT 1;
+--SOFTEST--
+SELECT artist_name
+, track_name
+, loudness
+FROM Spotifydata
+ORDER BY loudness ASC
+LIMIT 1;
